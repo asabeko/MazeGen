@@ -187,8 +187,8 @@ protected:
 
 	virtual void EnableCollision(const bool bShouldEnable);
 
-	// Clears all HISM instances.
-	virtual void ClearMaze();
+        // Destroys all spawned AStaticMeshActor cells.
+        virtual void ClearMaze();
 
 	virtual FVector2D GetMaxCellSize() const;
 
