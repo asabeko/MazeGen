@@ -373,8 +373,8 @@ void AMaze::Randomize()
 
 	Seed = FMath::RandRange(MIN_int32, MAX_int32);
 
-	PathStart.X = 0;
-	PathStart.X = 0;
+       PathStart.X = 0;
+       PathStart.Y = 0;
 	PathEnd.X = MazeSize.X - 1;
 	PathEnd.Y = MazeSize.Y - 1;
 
