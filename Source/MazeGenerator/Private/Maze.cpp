@@ -395,6 +395,8 @@ void AMaze::OnConstruction(const FTransform& Transform)
 
 void AMaze::PostProcessLoopsAndRooms()
 {
+        FMath::RandInit(Seed);
+
         if (MazeGrid.Num() == 0 || MazeGrid[0].Num() == 0)
         {
                 return;
