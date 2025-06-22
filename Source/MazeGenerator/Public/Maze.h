@@ -87,7 +87,7 @@ public:
        /** Probability to remove eligible walls when braiding loops */
        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
                meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0", DisplayPriority=3,
-                     ShortTooltip="Probability to remove a dead-end wall and create a loop"))
+                     ShortTooltip="Probability of converting a dead-end wall into a loop"))
        float LoopFactor;
 
        /** Chance to seed a rectangular room on a given floor cell */
