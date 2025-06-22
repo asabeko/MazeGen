@@ -3,6 +3,8 @@
 
 #include "Maze.h"
 
+#include "Math/RandomStream.h"
+
 #include "Algorithms/Algorithm.h"
 #include "Algorithms/Backtracker.h"
 #include "Algorithms/Division.h"
@@ -402,6 +404,11 @@ void AMaze::PostProcessLoopsAndRooms()
                 return;
         }
 
+        // TODO(RoomCarver): use RoomChance & RoomRadius once Agent-3 lands
+
+        FRandomStream Rand(Seed);
+        auto RandChance = [&Rand]() { return Rand.FRand(); };
+
         TArray<TArray<uint8>> ProcessedGrid = MazeGrid;
 
         const int32 Height = MazeGrid.Num();
@@ -434,9 +441,11 @@ void AMaze::PostProcessLoopsAndRooms()
                 }
         }
 
+        Candidates.Shrink();
+
         for (const FIntPoint& Cell : Candidates)
         {
-                if (FMath::FRand() < LoopFactor)
+                if (RandChance() < LoopFactor)
                 {
                         ProcessedGrid[Cell.Y][Cell.X] = 1;
                 }
