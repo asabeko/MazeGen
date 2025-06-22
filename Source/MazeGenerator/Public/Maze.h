@@ -81,8 +81,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze", meta=(ExposeOnSpawn, DisplayPriority=1))
 	int32 Seed;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Maze", meta=(ExposeOnSpawn, DisplayPriority=2))
-	FMazeSize MazeSize;
+       UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Maze", meta=(ExposeOnSpawn, DisplayPriority=2))
+       FMazeSize MazeSize;
+
+       /** Probability to remove eligible walls when braiding loops */
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
+               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0"))
+       float LoopFactor;
+
+       /** Chance to seed a rectangular room on a given floor cell */
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
+               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0"))
+       float RoomChance;
+
+       /** Half-extents of carved room when RoomChance succeeds */
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings")
+       FIntPoint RoomRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, DisplayName="Floor", Category="Maze|Cells",
 		meta=(NoResetToDefault, ExposeOnSpawn, DisplayPriority=0))

@@ -70,7 +70,11 @@ AMaze::AMaze()
 	GenerationAlgorithms.Add(EGenerationAlgorithm::Eller, TSharedPtr<Algorithm>(new Eller));
 	GenerationAlgorithms.Add(EGenerationAlgorithm::Prim, TSharedPtr<Algorithm>(new Prim));
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+       RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+       LoopFactor = 0.15f;
+       RoomChance = 0.05f;
+       RoomRadius = FIntPoint(1, 1);
 }
 
 void AMaze::UpdateMaze()
