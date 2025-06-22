@@ -404,7 +404,6 @@ void AMaze::PostProcessLoopsAndRooms()
         FRandomStream Rand(Seed);
 
         // TODO(RoomCarver): use RoomChance & RoomRadius once Agent-3 lands.
-
         TArray<TArray<uint8>> ProcessedGrid = MazeGrid;
 
         const int32 Height = MazeGrid.Num();
