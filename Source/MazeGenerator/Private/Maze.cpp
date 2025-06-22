@@ -92,14 +92,17 @@ void AMaze::UpdateMaze()
 	{
 		CreateMazeOutline();
 	}
-	MazeGrid = GenerationAlgorithms[GenerationAlgorithm]->GetGrid(MazeSize, Seed);
+    MazeGrid = GenerationAlgorithms[GenerationAlgorithm]->GetGrid(MazeSize, Seed);
 
-	if (bGeneratePath)
-	{
-		PathStart.ClampByMazeSize(MazeSize);
-		PathEnd.ClampByMazeSize(MazeSize);
-		MazePathGrid = GetMazePath(PathStart, PathEnd, PathLength);
-	}
+    // Braid maze and carve rooms if requested
+    PostProcessLoopsAndRooms();
+
+    if (bGeneratePath)
+    {
+            PathStart.ClampByMazeSize(MazeSize);
+            PathEnd.ClampByMazeSize(MazeSize);
+            MazePathGrid = GetMazePath(PathStart, PathEnd, PathLength);
+    }
 
 	for (int32 Y = 0; Y < MazeSize.Y; ++Y)
 	{
@@ -387,5 +390,62 @@ void AMaze::Randomize()
 
 void AMaze::OnConstruction(const FTransform& Transform)
 {
-	Super::OnConstruction(Transform);
+        Super::OnConstruction(Transform);
+}
+
+void AMaze::PostProcessLoopsAndRooms()
+{
+        if (MazeGrid.Num() == 0 || MazeGrid[0].Num() == 0)
+        {
+                return;
+        }
+
+        // Deterministic random stream for loop braiding
+        FRandomStream Rand(Seed);
+
+        // TODO(RoomCarver): use RoomChance & RoomRadius once Agent-3 lands.
+
+        TArray<TArray<uint8>> ProcessedGrid = MazeGrid;
+
+        const int32 Height = MazeGrid.Num();
+        const int32 Width = MazeGrid[0].Num();
+
+        TArray<FIntPoint> Candidates;
+        Candidates.Reserve(Height * Width / 4);
+
+        for (int32 Y = 1; Y < Height - 1; ++Y)
+        {
+                for (int32 X = 1; X < Width - 1; ++X)
+                {
+                        if (ProcessedGrid[Y][X])
+                        {
+                                continue;
+                        }
+
+                        const bool bNorth = ProcessedGrid[Y - 1][X] != 0;
+                        const bool bSouth = ProcessedGrid[Y + 1][X] != 0;
+                        const bool bEast = ProcessedGrid[Y][X + 1] != 0;
+                        const bool bWest = ProcessedGrid[Y][X - 1] != 0;
+
+                        const bool bOppositeNS = bNorth && bSouth && !bEast && !bWest;
+                        const bool bOppositeEW = bEast && bWest && !bNorth && !bSouth;
+
+                        if (bOppositeNS || bOppositeEW)
+                        {
+                                Candidates.Emplace(X, Y);
+                        }
+                }
+        }
+
+        Candidates.Shrink();
+
+        for (const FIntPoint& Cell : Candidates)
+        {
+                if (Rand.FRand() < LoopFactor)
+                {
+                        ProcessedGrid[Cell.Y][Cell.X] = 1;
+                }
+        }
+
+        MazeGrid = MoveTemp(ProcessedGrid);
 }

@@ -86,7 +86,8 @@ public:
 
        /** Probability to remove eligible walls when braiding loops */
        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
-               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0", DisplayPriority=3))
+               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0", DisplayPriority=3,
+                     ShortTooltip="Probability of converting a dead-end wall into a loop"))
        float LoopFactor;
 
        /** Chance to seed a rectangular room on a given floor cell */
@@ -196,9 +197,12 @@ protected:
 	 * algorithm with path connecting top-left and bottom-right corners.
 	 */
 	UFUNCTION(CallInEditor, Category="Maze", meta=(DisplayPriority=1, ShortTooltip = "Generate an arbitrary maze."))
-	virtual void Randomize();
+        virtual void Randomize();
 
-	virtual void CreateMazeOutline();
+
+        virtual void PostProcessLoopsAndRooms();
+
+        virtual void CreateMazeOutline();
 
 	virtual void EnableCollision(const bool bShouldEnable);
 
