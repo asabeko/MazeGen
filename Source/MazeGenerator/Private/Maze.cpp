@@ -59,8 +59,11 @@ FMazeCoordinates::operator TTuple<int, int>() const
 }
 
 AMaze::AMaze()
+    : LoopFactor(0.15f)
+    , RoomChance(0.05f)
+    , RoomRadius(FIntPoint(1, 1))
 {
-	PrimaryActorTick.bCanEverTick = false;
+        PrimaryActorTick.bCanEverTick = false;
 
 	GenerationAlgorithms.Add(EGenerationAlgorithm::Backtracker, TSharedPtr<Algorithm>(new Backtracker));
 	GenerationAlgorithms.Add(EGenerationAlgorithm::Division, TSharedPtr<Algorithm>(new Division));
@@ -71,10 +74,6 @@ AMaze::AMaze()
 	GenerationAlgorithms.Add(EGenerationAlgorithm::Prim, TSharedPtr<Algorithm>(new Prim));
 
        RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-
-       LoopFactor = 0.15f;
-       RoomChance = 0.05f;
-       RoomRadius = FIntPoint(1, 1);
 }
 
 void AMaze::UpdateMaze()

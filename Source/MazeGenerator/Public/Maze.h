@@ -86,16 +86,17 @@ public:
 
        /** Probability to remove eligible walls when braiding loops */
        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
-               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0"))
+               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0", DisplayPriority=3))
        float LoopFactor;
 
        /** Chance to seed a rectangular room on a given floor cell */
        UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
-               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0"))
+               meta=(ClampMin="0.0", ClampMax="1.0", UIMin="0.0", UIMax="1.0", DisplayPriority=4))
        float RoomChance;
 
        /** Half-extents of carved room when RoomChance succeeds */
-       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings")
+       UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze|Generation Settings",
+               meta=(ClampMin="0", DisplayPriority=5))
        FIntPoint RoomRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, DisplayName="Floor", Category="Maze|Cells",
