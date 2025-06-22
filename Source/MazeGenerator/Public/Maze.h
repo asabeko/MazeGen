@@ -196,9 +196,12 @@ protected:
 	 * algorithm with path connecting top-left and bottom-right corners.
 	 */
 	UFUNCTION(CallInEditor, Category="Maze", meta=(DisplayPriority=1, ShortTooltip = "Generate an arbitrary maze."))
-	virtual void Randomize();
+        virtual void Randomize();
 
-	virtual void CreateMazeOutline();
+
+        virtual void PostProcessLoopsAndRooms();
+
+        virtual void CreateMazeOutline();
 
 	virtual void EnableCollision(const bool bShouldEnable);
 
