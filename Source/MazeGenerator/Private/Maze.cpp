@@ -92,7 +92,7 @@ void AMaze::UpdateMaze()
 	{
 		CreateMazeOutline();
 	}
-	MazeGrid = GenerationAlgorithms[GenerationAlgorithm]->GetGrid(MazeSize, Seed);
+       MazeGrid = GenerationAlgorithms[GenerationAlgorithm]->GetGrid(MazeSize, Seed);
 
 	if (bGeneratePath)
 	{
@@ -358,6 +358,50 @@ FVector2D AMaze::GetMaxCellSize() const
 		}
 	}
 	return MaxCellSize;
+}
+
+void AMaze::PostProcessLoopsAndRooms()
+{
+       FRandomStream Rand(Seed);
+
+       // Braid loops by randomly removing eligible walls
+       for (int32 Y = 1; Y < MazeSize.Y - 1; ++Y)
+       {
+               for (int32 X = 1; X < MazeSize.X - 1; ++X)
+               {
+                       if (MazeGrid[Y][X] == 0)
+                       {
+                               const bool bVertical = MazeGrid[Y - 1][X] && MazeGrid[Y + 1][X];
+                               const bool bHorizontal = MazeGrid[Y][X - 1] && MazeGrid[Y][X + 1];
+                               if ((bVertical || bHorizontal) && Rand.FRand() < LoopFactor)
+                               {
+                                       MazeGrid[Y][X] = 1;
+                               }
+                       }
+               }
+       }
+
+       // Carve rectangular rooms with a given chance
+       for (int32 Y = 0; Y < MazeSize.Y; ++Y)
+       {
+               for (int32 X = 0; X < MazeSize.X; ++X)
+               {
+                       if (MazeGrid[Y][X] && Rand.FRand() < RoomChance)
+                       {
+                               const int32 XMin = FMath::Max(0, X - RoomRadius.X);
+                               const int32 XMax = FMath::Min(MazeSize.X - 1, X + RoomRadius.X);
+                               const int32 YMin = FMath::Max(0, Y - RoomRadius.Y);
+                               const int32 YMax = FMath::Min(MazeSize.Y - 1, Y + RoomRadius.Y);
+                               for (int32 RoomY = YMin; RoomY <= YMax; ++RoomY)
+                               {
+                                       for (int32 RoomX = XMin; RoomX <= XMax; ++RoomX)
+                                       {
+                                               MazeGrid[RoomY][RoomX] = 1;
+                                       }
+                               }
+                       }
+               }
+       }
 }
 
 void AMaze::GenerateMaze()

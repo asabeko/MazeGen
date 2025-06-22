@@ -205,7 +205,8 @@ protected:
         // Destroys all spawned AStaticMeshActor cells.
         virtual void ClearMaze();
 
-	virtual FVector2D GetMaxCellSize() const;
+        virtual FVector2D GetMaxCellSize() const;
+       virtual void PostProcessLoopsAndRooms();
 
 
 #if WITH_EDITOR
