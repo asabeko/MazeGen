@@ -395,12 +395,15 @@ void AMaze::OnConstruction(const FTransform& Transform)
 
 void AMaze::PostProcessLoopsAndRooms()
 {
-        FMath::RandInit(Seed);
-
         if (MazeGrid.Num() == 0 || MazeGrid[0].Num() == 0)
         {
                 return;
         }
+
+        // Deterministic random stream for loop braiding
+        FRandomStream Rand(Seed);
+
+        // TODO(RoomCarver): use RoomChance & RoomRadius once Agent-3 lands.
 
         TArray<TArray<uint8>> ProcessedGrid = MazeGrid;
 
@@ -434,9 +437,11 @@ void AMaze::PostProcessLoopsAndRooms()
                 }
         }
 
+        Candidates.Shrink();
+
         for (const FIntPoint& Cell : Candidates)
         {
-                if (FMath::FRand() < LoopFactor)
+                if (Rand.FRand() < LoopFactor)
                 {
                         ProcessedGrid[Cell.Y][Cell.X] = 1;
                 }
