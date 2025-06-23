@@ -65,14 +65,20 @@ struct FMazeCoordinates
 
 class Algorithm;
 class AStaticMeshActor;
+#if WITH_DEV_AUTOMATION_TESTS
+class FMazeLoopFactorTest;
+#endif
 
 UCLASS()
 class MAZEGENERATOR_API AMaze : public AActor
 {
-	GENERATED_BODY()
+        GENERATED_BODY()
+#if WITH_DEV_AUTOMATION_TESTS
+        friend class FMazeLoopFactorTest;
+#endif
 
 public:
-	AMaze();
+        AMaze();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Maze",
 		meta=(NoResetToDefault, ExposeOnSpawn, DisplayPriority=0))
