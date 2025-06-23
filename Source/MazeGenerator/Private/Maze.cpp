@@ -404,8 +404,6 @@ void AMaze::PostProcessLoopsAndRooms()
                 return;
         }
 
-        // TODO(RoomCarver): use RoomChance & RoomRadius once Agent-3 lands
-
         FRandomStream Rand(Seed);
         auto RandChance = [&Rand]() { return Rand.FRand(); };
 
@@ -448,6 +446,40 @@ void AMaze::PostProcessLoopsAndRooms()
                 if (RandChance() < LoopFactor)
                 {
                         ProcessedGrid[Cell.Y][Cell.X] = 1;
+                }
+        }
+
+        MazeGrid = MoveTemp(ProcessedGrid);
+
+        // --- Room carving pass ---
+        ProcessedGrid = MazeGrid;
+
+        for (int32 Y = 0; Y < Height; ++Y)
+        {
+                for (int32 X = 0; X < Width; ++X)
+                {
+                        if (!MazeGrid[Y][X])
+                        {
+                                continue;
+                        }
+
+                        if (RandChance() >= RoomChance)
+                        {
+                                continue;
+                        }
+
+                        const int32 MinX = FMath::Clamp(X - RoomRadius.X, 0, Width - 1);
+                        const int32 MaxX = FMath::Clamp(X + RoomRadius.X, 0, Width - 1);
+                        const int32 MinY = FMath::Clamp(Y - RoomRadius.Y, 0, Height - 1);
+                        const int32 MaxY = FMath::Clamp(Y + RoomRadius.Y, 0, Height - 1);
+
+                        for (int32 YY = MinY; YY <= MaxY; ++YY)
+                        {
+                                for (int32 XX = MinX; XX <= MaxX; ++XX)
+                                {
+                                        ProcessedGrid[YY][XX] = 1;
+                                }
+                        }
                 }
         }
 
