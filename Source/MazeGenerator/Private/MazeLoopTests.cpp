@@ -39,7 +39,11 @@ static int32 CountDeadEnds(const TArray<TArray<uint8>>& Grid)
     return Count;
 }
 
-IMPLEMENT_SIMPLE_AUTOMATION_TEST(FMazeLoopFactorTest, "MazeGenerator.LoopFactor.ReducesDeadEnds", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::ProductFilter)
+// Use fully-qualified flag names so the compiler can resolve them correctly
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FMazeLoopFactorTest,
+    "MazeGenerator.LoopFactor.ReducesDeadEnds",
+    EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::ProductFilter)
 
 bool FMazeLoopFactorTest::RunTest(const FString& Parameters)
 {
