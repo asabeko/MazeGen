@@ -55,9 +55,9 @@ bool FMazeCoordinates::operator!=(const FMazeCoordinates& Other) const
 	return !(*this == Other);
 }
 
-FMazeCoordinates::operator TTuple<int, int>() const
+TPair<int32, int32> FMazeCoordinates::operator TPair<int32, int32>() const
 {
-	return TPair<int32, int32>{X, Y};
+        return {X, Y};
 }
 
 AMaze::AMaze()
